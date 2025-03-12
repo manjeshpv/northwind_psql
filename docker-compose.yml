@@ -3,14 +3,14 @@ version: '3.8'
 services:
   reporting:
     container_name: reporting
-    image: postgres:latest
+    image: chumaky/postgres_mysql_fdw
     environment:
       POSTGRES_DB: reporting
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - reporting_postgresql_bin:/usr/lib/postgresql
-      - reporting_postgresql_data:/var/lib/postgresql/data
+      - dreporting_postgresql_bin:/usr/lib/postgresql
+      - dreporting_postgresql_data:/var/lib/postgresql/data
       - ./files:/files
     ports:
       - 45432:5432
@@ -65,8 +65,8 @@ networks:
     driver: bridge
 
 volumes:
-  reporting_postgresql_data:
-  reporting_postgresql_bin:
+  dreporting_postgresql_data:
+  dreporting_postgresql_bin:
   metabase-data:
   mysql-data:
   pgadmin_root_prefs:
