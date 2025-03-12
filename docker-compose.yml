@@ -1,6 +1,8 @@
+version: '3.8'
+
 services:
-  db:
-    container_name: db
+  consent:
+    container_name: consent
     image: postgres:latest
     environment:
       POSTGRES_DB: northwind
@@ -16,21 +18,17 @@ services:
     networks:
       - db
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
+  student:
+    image: mysql:8.0
+    container_name: student
     environment:
-      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
-      PGADMIN_DEFAULT_PASSWORD: postgres
-      PGADMIN_LISTEN_PORT: 5050
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    volumes:
-      - postgresql_bin:/usr/lib/postgresql
-      - pgadmin_root_prefs:/root/.pgadmin
-      - pgadmin_working_dir:/var/lib/pgadmin
-      - ./files:/files
+      MYSQL_ROOT_PASSWORD: rootpassword # Set the root password
+      MYSQL_DATABASE: my_database # Name of the database to be created
     ports:
-      - 5050:5050
+      - "3308:3306"  # Expose MySQL port
+    volumes:
+      - mysql-data:/var/lib/mysql # Persist MySQL data
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql # Mount the seed.sql file for initialization
     networks:
       - db
 
@@ -39,6 +37,7 @@ networks:
     driver: bridge
 
 volumes:
+  mysql-data:
   pgadmin_root_prefs:
     driver: local
   pgadmin_working_dir:
