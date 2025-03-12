@@ -20,7 +20,7 @@ services:
     container_name: consent
     image: postgres:latest
     environment:
-      POSTGRES_DB: northwind
+      POSTGRES_DB: consent
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
