@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  reporting:
+    container_name: reporting
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: reporting
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - reporting_postgresql_bin:/usr/lib/postgresql
+      - reporting_postgresql_data:/var/lib/postgresql/data
+      - ./files:/files
+    ports:
+      - 45432:5432
+    networks:
+      - db
   consent:
     container_name: consent
     image: postgres:latest
@@ -11,7 +26,7 @@ services:
     volumes:
       - postgresql_bin:/usr/lib/postgresql
       - postgresql_data:/var/lib/postgresql/data
-      - ./northwind.sql:/docker-entrypoint-initdb.d/northwind.sql
+      - ./consent/northwind.sql:/docker-entrypoint-initdb.d/northwind.sql
       - ./files:/files
     ports:
       - 55432:5432
@@ -25,10 +40,23 @@ services:
       MYSQL_ROOT_PASSWORD: rootpassword # Set the root password
       MYSQL_DATABASE: my_database # Name of the database to be created
     ports:
-      - "3308:3306"  # Expose MySQL port
+      - "33306:3306"  # Expose MySQL port
     volumes:
       - mysql-data:/var/lib/mysql # Persist MySQL data
-      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql # Mount the seed.sql file for initialization
+      - ./student/seed.sql:/docker-entrypoint-initdb.d/seed.sql # Mount the seed.sql file for initialization
+    networks:
+      - db
+
+  metabase:
+    image: metabase/metabase:v0.45.3  # You can use the latest stable version of Metabase
+    container_name: metabase
+    environment:
+      MB_DB_TYPE: h2
+      MB_DB_FILE: /metabase-data/metabase.db  # Path where the H2 database file will be stored
+    ports:
+      - "3000:3000"  # Expose Metabase on port 3000
+    volumes:
+      - metabase-data:/metabase-data  # Persist Metabase data in a Docker volume
     networks:
       - db
 
@@ -37,6 +65,9 @@ networks:
     driver: bridge
 
 volumes:
+  reporting_postgresql_data:
+  reporting_postgresql_bin:
+  metabase-data:
   mysql-data:
   pgadmin_root_prefs:
     driver: local
