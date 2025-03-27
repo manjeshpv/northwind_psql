@@ -10,6 +10,8 @@ CREATE USER MAPPING FOR current_user
 SERVER remote_pg_server
 OPTIONS (user 'postgres', password 'postgres');
 
+
+--        consent pg public.table1
 IMPORT FOREIGN SCHEMA public
 FROM SERVER remote_pg_server
 INTO consent;

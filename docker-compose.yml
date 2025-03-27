@@ -16,6 +16,7 @@ services:
       - 45432:5432
     networks:
       - db
+
   consent:
     container_name: consent
     image: postgres:latest
@@ -33,32 +34,7 @@ services:
     networks:
       - db
 
-  student:
-    image: mysql:8.0
-    container_name: student
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword # Set the root password
-      MYSQL_DATABASE: my_database # Name of the database to be created
-    ports:
-      - "33306:3306"  # Expose MySQL port
-    volumes:
-      - mysql-data:/var/lib/mysql # Persist MySQL data
-      - ./student/seed.sql:/docker-entrypoint-initdb.d/seed.sql # Mount the seed.sql file for initialization
-    networks:
-      - db
 
-  metabase:
-    image: metabase/metabase:v0.45.3  # You can use the latest stable version of Metabase
-    container_name: metabase
-    environment:
-      MB_DB_TYPE: h2
-      MB_DB_FILE: /metabase-data/metabase.db  # Path where the H2 database file will be stored
-    ports:
-      - "3000:3000"  # Expose Metabase on port 3000
-    volumes:
-      - metabase-data:/metabase-data  # Persist Metabase data in a Docker volume
-    networks:
-      - db
 
 networks:
   db:

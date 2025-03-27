@@ -12,7 +12,7 @@ CREATE USER MAPPING FOR reporting_user
 SERVER mysql_student_db
 OPTIONS (username 'root', password 'rootpassword');
 
-
+-- Todo: import mysql db
 CREATE FOREIGN TABLE order_details (
     OrderDetailID INTEGER,
     OrderID INTEGER,
